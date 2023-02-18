@@ -38,9 +38,12 @@ class AFN(AF):
                 if first == '|':
                     return self.__hamburguesa(op2, op1)
             else:
-                # Si se encuentra un Kleene solo se necesita un operador, creado recursivamente.
                 op1 = self.__crear_AFN()
-                return self.__barco(op1)
+                # Si se encuentra un Kleene solo se necesita un operador, creado recursivamente.
+                if first == '+':
+                    return self.__positiva(op1)
+                else:
+                    return self.__barco(op1)
 
     def simular(self, string):
         acu = []
@@ -87,6 +90,32 @@ class AFN(AF):
         # Se añade una transición del estado inicial al final con epsilon.
         transition = (final, 'E')
         self.transiciones[initial].append(transition)
+
+        # Se crea una transición del estado final del argumento al estado final del barco con epsilon.
+        transition = (final, 'E')
+        self.transiciones[op1[1]].append(transition)
+
+        return (initial, final)
+
+    def __positiva(self, op1):
+        # Se crea el estado inicial del barco
+        self.count += 1
+        initial = self.count
+        self.estados.add(initial)
+        
+        # Se crea la transición al estado inicial del diagrama de transición del argumento.
+        transition = (op1[0], 'E')
+        self.transiciones[initial] = [(transition)]
+
+        # Se crea una transición del estado final del argumento a su estado inicial.
+        transition = (op1[0], 'E')
+        self.transiciones[op1[1]].append(transition)
+        
+        # Se crea el estado final del barco.
+        self.count += 1
+        final = self.count
+        self.estados.add(final)
+        self.transiciones[final] = []
 
         # Se crea una transición del estado final del argumento al estado final del barco con epsilon.
         transition = (final, 'E')

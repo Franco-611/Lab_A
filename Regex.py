@@ -10,7 +10,7 @@ class Regex(object):
         # Obtener elementos que no son operadores
         # ni parentesis
         for element in self.expresion:
-            if not (element in '()*| E'):
+            if not (element in '()*| E + ? ^'):
                 self.Alfabeto.add(element)
     
     def get_alfabeto(self):
