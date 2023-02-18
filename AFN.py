@@ -13,6 +13,7 @@ class AFN(AF):
 
     def __Thompson(self):
         postfix = self.Regex.get_postfix()
+        print(postfix)
         # Stack made of postfix elements
         for element in postfix:
             self.stack.append(element)

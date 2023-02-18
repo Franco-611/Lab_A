@@ -36,8 +36,10 @@ class Regex(object):
 
     def get_expresion(self):
         return self.expresion
-    
+
     def get_postfix(self):
+
+        self.expresion = self.expresion.replace('?', '|E')
 
         res = ""
         operadores = ['|', '?', '+', '*', '^']
