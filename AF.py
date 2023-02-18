@@ -20,8 +20,8 @@ class AF(object):
 
         while(len(stack) > 0):
             t = stack.pop()
-            # Obtener todos los estados a los que se llega con ε.
-            reached = [x[0] for x in self.transiciones[t] if x[1] == 'ε']
+            # Obtener todos los estados a los que se llega con E.
+            reached = [x[0] for x in self.transiciones[t] if x[1] == 'E']
             # Agregar los estados al resultado.
             for u in reached:
                 if not(u in res):

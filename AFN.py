@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+import pydot
 from AF import *
 from time import perf_counter
 
@@ -23,7 +25,7 @@ class AFN(AF):
     def __crear_AFN(self):
         if len(self.stack) != 0:
             first = self.stack.pop()
-            if first in self.alfabeto or first == 'ε':
+            if first in self.alfabeto or first == 'E':
                 # Se crea un elemento unitario si solo se encuentra un elemento del alfabeto.
                 return self.__unidad(first)
             if self.__is_binary(first):
@@ -43,7 +45,7 @@ class AFN(AF):
     def simular(self, string):
         acu = []
         s = self.e_closure(self.inicio)
-        acu.append(('ε', s))
+        acu.append(('E', s))
         start = perf_counter()
         if len(string) > 0:
             string = iter(string)
@@ -69,11 +71,11 @@ class AFN(AF):
         self.estados.add(initial)
         
         # Se crea la transición al estado inicial del diagrama de transición del argumento.
-        transition = (op1[0], 'ε')
+        transition = (op1[0], 'E')
         self.transiciones[initial] = [(transition)]
 
         # Se crea una transición del estado final del argumento a su estado inicial.
-        transition = (op1[0], 'ε')
+        transition = (op1[0], 'E')
         self.transiciones[op1[1]].append(transition)
         
         # Se crea el estado final del barco.
@@ -83,11 +85,11 @@ class AFN(AF):
         self.transiciones[final] = []
 
         # Se añade una transición del estado inicial al final con epsilon.
-        transition = (final, 'ε')
+        transition = (final, 'E')
         self.transiciones[initial].append(transition)
 
         # Se crea una transición del estado final del argumento al estado final del barco con epsilon.
-        transition = (final, 'ε')
+        transition = (final, 'E')
         self.transiciones[op1[1]].append(transition)
 
         return (initial, final)
@@ -100,9 +102,9 @@ class AFN(AF):
 
         # Se crea una transición para cada una de las dos partes de la hamburguesa
         # Estos son los estados iniciales de los dos operandos del OR.
-        transition = (op1[0], 'ε')
+        transition = (op1[0], 'E')
         self.transiciones[initial] = [(transition)]
-        transition = (op2[0], 'ε')
+        transition = (op2[0], 'E')
         self.transiciones[initial].append(transition)
 
         # Se crea un estado final de la hamburguesa.
@@ -113,11 +115,11 @@ class AFN(AF):
         self.transiciones[final] = []
 
         # Se crea una transición del estado final de un componente del OR al final de la hamburguesa.
-        transition = (final, 'ε')
+        transition = (final, 'E')
         self.transiciones[op1[1]].append(transition)
 
         # Se crea una transición del estado final del componente restante del OR al final de la hamburguesa.
-        transition = (final, 'ε')
+        transition = (final, 'E')
         self.transiciones[op2[1]].append(transition)
 
         return (initial, final)
@@ -127,9 +129,9 @@ class AFN(AF):
         initial = op1[0]
         final = op2[1]
 
-        # Se crea una transición entre estos estados con ε
-        # Tiene la forma: estado_incial_1 - ε - > estado_inicial_2
-        transition = (op2[0], 'ε')
+        # Se crea una transición entre estos estados con E
+        # Tiene la forma: estado_incial_1 - E - > estado_inicial_2
+        transition = (op2[0], 'E')
 
         # Se agrega la transición
         self.transiciones[op1[1]].append(transition)
@@ -161,7 +163,41 @@ class AFN(AF):
             return True
         return False
 
+    def dibujar(self):
+        # Definir el grafo del AFN utilizando la sintaxis de Graphviz
+        afn = pydot.Dot(graph_type='digraph')
+        afn.set_rankdir('LR')  # Establecer la dirección de la grafica
+
+        for element in self.estados:
+
+            if element in self.aceptacion:
+                # Se crea un nodo para cada estado
+                node = pydot.Node(str(element), shape='doublecircle')
+                afn.add_node(node)
+            elif element in self.inicio:
+                # Se crea un nodo para cada estado
+                node = pydot.Node(str(element), shape='circle')
+                qI = pydot.Node('qI', shape='point')
+                afn.add_node(node)
+                afn.add_node(qI)
+                afn.add_edge(pydot.Edge(qI,node))
+            else:
+                # Se crea un nodo para cada estado
+                node = pydot.Node(str(element), shape='circle')
+
+                # Se agrega el nodo al grafo
+                afn.add_node(node)
+
+        for key in self.transiciones:
+            for elements in self.transiciones[key]:
+                afn.add_edge(pydot.Edge(str(key), str(elements[0]), label=elements[1]))
+
+
+        # Se guarda el grafo en un archivo PNG
+        afn.write_png('afn.png')
+
     def __str__(self):
+    
         res = f'---------------- {self.name} ----------------\n'
         res += 'Estado inicial: ' + str(self.inicio) + '\n'
         res += 'Estado de aceptación: ' + str(self.aceptacion) + '\n'

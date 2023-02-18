@@ -20,3 +20,4 @@ class Stack:
 
     def clear(self):
         self.array = []
+        
