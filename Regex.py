@@ -37,6 +37,47 @@ class Regex(object):
     def get_expresion(self):
         return self.expresion
 
+    def validar_expresion_regular(self):
+        balance = 0
+        for char in self.expresion:
+            if char == "(":
+                balance += 1
+            elif char == ")":
+                balance -= 1
+                if balance < 0:
+                    return False
+        i = 0
+        longitud = len(self.expresion)
+        while i < longitud:
+            caracter_actual = self.expresion[i]
+            if caracter_actual == '\\':
+                i += 1
+                if i >= longitud:
+                    return False
+            elif caracter_actual == '(':
+                balance = 1
+                i += 1
+                while i < longitud and balance > 0:
+                    caracter_actual = self.expresion[i]
+                    if caracter_actual == '\\':
+                        i += 1
+                    elif caracter_actual == '(':
+                        balance += 1
+                    elif caracter_actual == ')':
+                        balance -= 1
+                    i += 1
+                if balance != 0:
+                    return False
+            elif caracter_actual in '*+?':
+                if i == 0 or self.expresion[i-1] in '*+?':
+                    return False
+            elif caracter_actual == '|':
+                if i == 0 or i == longitud - 1 or self.expresion[i-1] == '|' or self.expresion[i+1] == '|':
+                    return False
+            i += 1
+        
+        return True
+
     def get_postfix(self):
 
         self.expresion = self.expresion.replace('?', '|E')
