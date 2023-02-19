@@ -10,7 +10,7 @@ class Regex(object):
         # Obtener elementos que no son operadores
         # ni parentesis
         for element in self.expresion:
-            if not (element in '()*| E + ? ^'):
+            if not (element in '()*| ε + ? ^'):
                 self.Alfabeto.add(element)
     
     def get_alfabeto(self):
@@ -80,8 +80,6 @@ class Regex(object):
 
     def get_postfix(self):
 
-        self.expresion = self.expresion.replace('?', '|E')
-
         res = ""
         operadores = ['|', '?', '+', '*', '^']
         binarios = ['^', '|']
@@ -124,4 +122,7 @@ class Regex(object):
 
         while stack.size() > 0:
             postfix += stack.pop()
+
+        postfix = postfix.replace('?', 'ε|')
+
         return postfix

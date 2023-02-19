@@ -39,17 +39,3 @@ class AF(object):
                     result.add(element[0])
                     
         return result
-
-    def write_to_file(self):
-        res = f'---------------- {self.name} ----------------\n'
-        res += 'Estado inicial: ' + str(self.inicio) + '\n'
-        res += 'Estados de aceptación: ' + str(self.aceptacion) + '\n'
-        res += 'Estados: ' + str(self.estados) + '\n'
-        res += 'Simbolos: ' + str(self.alfabeto) + '\n'
-        res += 'Transiciones:\n'
-        for key in self.transiciones:
-            for elements in self.transiciones[key]:
-                res += str(key) + ' - (' + str(elements[1]) + ') - > ' + str(elements[0]) + '\n'
-        with open(f'./Resultados/{self.name}.txt', "w", encoding="utf-8") as f:
-            f.write(res)
-        
