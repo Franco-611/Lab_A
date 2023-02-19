@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 import pydot
 from AF import *
-from time import perf_counter
 
 class AFN(AF):
     def __init__(self, regex):
@@ -45,28 +43,6 @@ class AFN(AF):
                     return self.__positiva(op1)
                 else:
                     return self.__barco(op1)
-
-    def simular(self, string):
-        acu = []
-        s = self.e_closure(self.inicio)
-        acu.append(('E', s))
-        start = perf_counter()
-        if len(string) > 0:
-            string = iter(string)
-            c = next(string)
-            try:
-                while True:
-                    s = self.e_closure(self.move(s, c))
-                    acu.append((c, s))
-                    c = next(string)
-            except: StopIteration
-        end = perf_counter()
-        diff = end - start
-
-        if s.intersection(self.aceptacion) != set():
-            return True, acu, diff
-        
-        return False, acu, diff
 
     def __barco(self, op1):
         # Se crea el estado inicial del barco
