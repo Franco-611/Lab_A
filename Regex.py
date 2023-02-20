@@ -72,7 +72,7 @@ class Regex(object):
                 if i == 0 or self.expresion[i-1] in '*+?':
                     return False
             elif caracter_actual == '|':
-                if i == 0 or i == longitud - 1 or self.expresion[i-1] == '|' or self.expresion[i+1] == '|':
+                if i == 0 or i == longitud - 1 or self.expresion[i-1] == '|' or self.expresion[i+1] == '|' or self.expresion[i+1] == '?' or self.expresion[i+1] == '*' or self.expresion[i+1] == '+':
                     return False
             i += 1
         
