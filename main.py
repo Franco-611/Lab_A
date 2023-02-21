@@ -6,8 +6,11 @@ Expresion = input('Ingrese la expresion regular: ')
 # Generar AFN
 regex = Regex(Expresion)
 
-if not regex.validar_expresion_regular():
+mensaje = regex.validar_expresion_regular()
+
+if ( mensaje != True):
     print('La expresion regular no es valida')
+    print(mensaje)
     exit()
 
 print('La expresion regular es valida')

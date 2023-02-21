@@ -45,7 +45,7 @@ class Regex(object):
             elif char == ")":
                 balance -= 1
                 if balance < 0:
-                    return False
+                    return "Error: Los paréntesis están desbalanceados."
         i = 0
         longitud = len(self.expresion)
         while i < longitud:
@@ -53,7 +53,7 @@ class Regex(object):
             if caracter_actual == '\\':
                 i += 1
                 if i >= longitud:
-                    return False
+                    return "Error: El caracter \\ está al final de la expresión regular."
             elif caracter_actual == '(':
                 balance = 1
                 i += 1
@@ -67,15 +67,15 @@ class Regex(object):
                         balance -= 1
                     i += 1
                 if balance != 0:
-                    return False
+                    return "Error: Los paréntesis en la subexpresión están desbalanceados."
             elif caracter_actual in '*+?':
-                if i == 0 or self.expresion[i-1] in '*+?':
-                    return False
+                if i == 0 or self.expresion[i-1] in '?':
+                    return "Error: El operador está al principio de la expresión o después de otro operador."
             elif caracter_actual == '|':
                 if i == 0 or i == longitud - 1 or self.expresion[i-1] == '|' or self.expresion[i+1] == '|' or self.expresion[i+1] == '?' or self.expresion[i+1] == '*' or self.expresion[i+1] == '+':
-                    return False
+                    return "Error: El operador | está en la posición incorrecta o seguido de otro operador."
             i += 1
-        
+
         return True
 
     def get_postfix(self):
