@@ -50,18 +50,12 @@ class Regex(object):
         longitud = len(self.expresion)
         while i < longitud:
             caracter_actual = self.expresion[i]
-            if caracter_actual == '\\':
-                i += 1
-                if i >= longitud:
-                    return "Error: El caracter \\ está al final de la expresión regular."
-            elif caracter_actual == '(':
+            if caracter_actual == '(':
                 balance = 1
                 i += 1
                 while i < longitud and balance > 0:
                     caracter_actual = self.expresion[i]
-                    if caracter_actual == '\\':
-                        i += 1
-                    elif caracter_actual == '(':
+                    if caracter_actual == '(':
                         balance += 1
                     elif caracter_actual == ')':
                         balance -= 1
