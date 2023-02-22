@@ -1,4 +1,5 @@
 import pydot
+from collections import deque
 from AF import *
 
 class AFN(AF):
@@ -200,6 +201,23 @@ class AFN(AF):
 
         # Se guarda el grafo en un archivo PNG
         afn.write_png('afn.png', encoding="utf8")
+
+    def orderdar(self):
+        visited = [self.inicio]
+        queue = deque([self.inicio])
+        ordenados = []
+
+        while queue:
+            nodo = queue.popleft()
+            ordenados.append(nodo)
+
+            for key in self.transiciones:
+                for elements in self.transiciones[key]:
+                    if elements[0] not in visited:
+                        visited.append(elements[0])
+                        queue.append(elements[0])
+
+        return ordenados
 
     def __str__(self):
     

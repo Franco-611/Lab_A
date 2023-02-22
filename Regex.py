@@ -38,14 +38,34 @@ class Regex(object):
         return self.expresion
 
     def validar_expresion_regular(self):
+
+        if not self.expresion.strip():
+            return "Error: La expresión está vacía."
+
+
         balance = 0
-        for char in self.expresion:
+        subexpresiones = []
+        pila_indices_apertura = []
+        for i, char in enumerate(self.expresion):
             if char == "(":
                 balance += 1
+                pila_indices_apertura.append(i)
             elif char == ")":
                 balance -= 1
                 if balance < 0:
                     return "Error: Los paréntesis están desbalanceados."
+                indice_apertura = pila_indices_apertura.pop()
+                subexpresion = self.expresion[indice_apertura+1:i]
+                subexpresiones.append(subexpresion)
+        if balance != 0:
+            return "Error: Los paréntesis están desbalanceados."
+
+        if '' in subexpresiones:
+            return "Error: La expresión esta vacia."
+        for subexpresion in subexpresiones:
+            if subexpresion.isspace():
+                return "Error: La expresión esta vacia."
+
         i = 0
         longitud = len(self.expresion)
         while i < longitud:
