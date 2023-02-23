@@ -18,6 +18,7 @@ class AFN(AF):
 
         # Crear AFN con Thompson
         initial, acceptance = self.__crear_AFN()
+        self.inicial = initial
         self.inicio.add(initial)
         self.aceptacion.add(acceptance)
     
@@ -170,11 +171,13 @@ class AFN(AF):
         return False
 
     def dibujar(self):
+
+        ordenado = self.orderdar()
         # Definir el grafo del AFN utilizando la sintaxis de Graphviz
         afn = pydot.Dot(graph_type='digraph')
         afn.set_rankdir('LR')  # Establecer la dirección de la grafica
 
-        for element in self.estados:
+        for element in ordenado:
 
             if element in self.aceptacion:
                 # Se crea un nodo para cada estado
@@ -203,8 +206,8 @@ class AFN(AF):
         afn.write_png('afn.png', encoding="utf8")
 
     def orderdar(self):
-        visited = [self.inicio]
-        queue = deque([self.inicio])
+        visited = [self.inicial]
+        queue = deque([self.inicial])
         ordenados = []
 
         while queue:
