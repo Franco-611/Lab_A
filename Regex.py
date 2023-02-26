@@ -39,6 +39,11 @@ class Regex(object):
 
     def validar_expresion_regular(self):
 
+        for element in self.expresion:
+            if not (element.isalnum() or element in '()*| ε + ? ^'):
+                return "Error: La cadena contiene caracteres invalidos."
+            
+
         if not self.expresion.strip():
             return "Error: La expresión está vacía."
 
